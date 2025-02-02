@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo-placeholder">Logo</div>
+    <h1>Task Manager</h1>
+    <div class="theme-toggle">
+      <button id="themeToggle">🌙 Toggle Theme</button>
+    </div>
+  </header>
+
+  <!-- Search Bar -->
+  <div id="mainContainer">
+    <div id="searchContainer">
+      <button onclick="searchTasks()">🔍</button>
+      <input type="text" id="searchInput" placeholder="Search tasks...">
+    </div>
+    <div id="filterButtons">
+      <button id="showAll">Show All</button>
+      <button id="showCompleted">Show Completed</button>
+      <button id="showPending">Show Pending</button>
+    </div>
+  </div>
+  
+ 
+  <!-- Task Form -->
+  <div id="taskForm">
+    <input type="text" id="taskInput" placeholder="Enter task">
+    <input type="date" id="taskDate">
+    <input type="time" id="taskTime">
+    <select id="taskCategory">
+      <option value="work">Work</option>
+      <option value="personal">Personal</option>
+      <option value="misc">Misc</option>
+    </select>
+    <button onclick="addTask()">Add Task</button>
+  </div>
+
+  <!-- Filter Buttons -->
+ 
+
+  <!-- Motivational Quote -->
+  <div id="quoteText"></div>
+
+  <!-- Task List -->
+  <ul id="tasks"></ul>
+
+  <!-- Task History Modal -->
+  <div id="historyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      
+      <button id="clearHistoryBtn" class="danger-btn">Clear History</button>
+      <ul id="historyList"></ul>
+    </div>
+  </div>
+
+  <!-- History Button -->
+  <button id="historyBtn" onclick="openModal()">📜 Task History</button>
+
+  <!-- Notification -->
+  <div id="notification"></div>
+
+  <!-- Notification Sound -->
+  <audio id="notificationSound" src="notification.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
