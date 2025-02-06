@@ -1,0 +1,400 @@
+document.getElementById('themeToggle').addEventListener('click', function() {
+  document.body.classList.toggle('light-theme');
+});
+document.addEventListener("DOMContentLoaded", function () {
+  requestNotificationPermission();
+});
+// Quotes Array
+const quotesArray = [
+  "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+  "The way to get started is to quit talking and begin doing.",
+  "Don't watch the clock; do what it does. Keep going.",
+  "You don't have to be great to start, but you have to start to be great.",
+  "The best time to plant a tree was 20 years ago. The second-best time is now.",
+  "It’s not whether you get knocked down, it’s whether you get up.",
+  "The only way to achieve the impossible is to believe it is possible.",
+  "Hardships often prepare ordinary people for an extraordinary destiny.",
+  "Everything you’ve ever wanted is on the other side of fear.",
+  "Opportunities don't happen, you create them."
+];
+
+function getRandomQuote() {
+  return quotesArray[Math.floor(Math.random() * quotesArray.length)];
+}
+
+function addTask() {
+  const taskInput = document.getElementById('taskInput');
+  const taskDate = document.getElementById('taskDate');
+  const taskTime = document.getElementById('taskTime');
+  const taskCategory = document.getElementById('taskCategory');
+  const tasksList = document.getElementById('tasks');
+  const historyList = document.getElementById('historyList');
+
+  if (taskInput.value.trim() === '') {
+      alert('Please enter a task.');
+      return;
+  }
+
+  const taskItem = document.createElement('li');
+  taskItem.innerHTML = `
+      <span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span>
+      <div class="quote">${getRandomQuote()}</div>
+      <textarea class="sticky-note" placeholder="Add a note..."></textarea>
+      <div class="task-actions">
+          <button class="complete-btn" onclick="completeTask(this)">Complete</button>
+          <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+      </div>
+  `;
+  tasksList.appendChild(taskItem);
+
+  const historyItem = document.createElement('li');
+  historyItem.innerHTML = `<span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span> <span class="status">Pending</span>`;
+  historyItem.dataset.task = taskInput.value;
+  historyItem.dataset.date = taskDate.value;
+  historyItem.dataset.time = taskTime.value;
+  historyList.appendChild(historyItem);
+
+  taskInput.value = '';
+  taskDate.value = '';
+  taskTime.value = '';
+  taskCategory.value = 'work';
+
+  showNotification('Task added successfully!');
+  scheduleNotification(taskInput.value, taskDate.value, taskTime.value, historyItem);
+}
+
+function completeTask(button) {
+  const taskItem = button.closest('li');
+  taskItem.classList.toggle('done');
+  updateHistoryStatus(taskItem.textContent, 'Done');
+}
+
+function deleteTask(button) {
+  const taskItem = button.closest('li');
+  updateHistoryStatus(taskItem.textContent, 'Deleted');
+  taskItem.remove();
+  showNotification('Task deleted successfully!');
+}
+
+function updateHistoryStatus(taskText, status) {
+  const historyItems = document.querySelectorAll('#historyList li');
+  historyItems.forEach(item => {
+      if (item.dataset.task === taskText) {
+          item.querySelector('.status').textContent = status;
+      }
+  });
+}
+
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  setTimeout(() => {
+      notification.style.display = 'none';
+  }, 3000);
+}
+
+function openModal() {
+  document.getElementById('historyModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('historyModal').style.display = 'none';
+}
+
+document.getElementById('clearHistoryBtn').addEventListener('click', function() {
+  document.getElementById('historyList').innerHTML = '';
+});
+
+function scheduleNotification(task, date, time, historyItem) {
+  if (!('Notification' in window)) {
+    console.log('This browser does not support notifications.');
+    return;
+  }
+  Notification.requestPermission().then(permission => {
+    if (permission === 'granted') {
+      const taskDateTime = new Date(`${date}T${time}`);
+      const now = new Date();
+      const delay = taskDateTime - now;
+
+      if (delay > 0) {
+        setTimeout(() => {
+          const notification = new Notification('Task Reminder', {
+            body: `Reminder: ${task}`
+          });
+          notification.onclick = () => {
+            window.focus();
+          };
+          historyItem.querySelector('.status').textContent = 'Reminded but Pending';
+        }, delay);
+      }
+    }
+  });
+}
+_____________________________________________________________________________________________________________________
+document.getElementById('themeToggle').addEventListener('click', function() {
+  document.body.classList.toggle('light-theme');
+});
+let history = [];
+// Quotes Array
+const quotesArray = [
+  "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+  "The way to get started is to quit talking and begin doing.",
+  "Don't watch the clock; do what it does. Keep going.",
+  "You don't have to be great to start, but you have to start to be great.",
+  "The best time to plant a tree was 20 years ago. The second-best time is now.",
+  "It’s not whether you get knocked down, it’s whether you get up.",
+  "The only way to achieve the impossible is to believe it is possible.",
+  "Hardships often prepare ordinary people for an extraordinary destiny.",
+  "Everything you’ve ever wanted is on the other side of fear.",
+  "Opportunities don't happen, you create them."
+];
+
+function getRandomQuote() {
+  return quotesArray[Math.floor(Math.random() * quotesArray.length)];
+}
+
+function requestNotificationPermission() {
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  requestNotificationPermission();
+  loadTasks(); // Load tasks from local storage on page load
+});
+function isTaskDateTimeValid(taskDate, taskTime) {
+  const currentDateTime = new Date(); // Current date and time
+  const taskDateTime = new Date(`${taskDate}T${taskTime}`); // Task date and time
+
+  // Check if the task date/time is in the future
+  return taskDateTime > currentDateTime;
+}
+function isTaskTextValid(taskText) {
+  // Regex to allow alphanumeric characters, spaces, and basic punctuation
+  const regex = /^[a-zA-Z0-9\s.,!?]+$/;
+  return regex.test(taskText);
+}
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.forEach(task => {
+      const taskItem = document.createElement('li');
+      taskItem.innerHTML = `
+       <span>${task.text} - ${task.date} ${task.time} (${task.category})</span>
+      <div class="quote">${task.quote}</div>
+      <textarea class="sticky-note" placeholder="Add a note..."></textarea>
+      <div class="task-actions">
+          <button class="complete-btn" onclick="completeTask(this)">Complete</button>
+          <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+      </div>
+      `;
+      document.getElementById('tasks').appendChild(taskItem);
+  });
+}
+
+function scheduleNotification(task) {
+  let taskDateTime = new Date(task.date + "T" + task.time);
+  let timeUntilTask = taskDateTime - new Date();
+  if (timeUntilTask > 0) {
+    setTimeout(() => showNotification(task.text, task.quote), timeUntilTask);
+  }
+}
+
+function showNotification(taskText, quote) {
+  if (Notification.permission === "granted") {
+    new Notification("Task Reminder", { body: `${taskText}\nMotivation: ${quote}` });
+    document.getElementById("notificationSound").play();
+  }
+}
+
+function showInAppNotification(message) {
+  const notificationDiv = document.getElementById("notification");
+  notificationDiv.textContent = message;
+  notificationDiv.style.display = "block";
+  setTimeout(() => {
+    notificationDiv.style.display = "none";
+  }, 3000);
+}
+
+function addTask() {
+  const taskInput = document.getElementById('taskInput');
+  const taskDate = document.getElementById('taskDate');
+  const taskTime = document.getElementById('taskTime');
+  const taskCategory = document.getElementById('taskCategory');
+
+  // Validate task text and date/time (as before)
+  if (!isTaskTextValid(taskInput.value.trim())) {
+    alert('Task text should not contain special characters.');
+    return;
+  }
+  if (!isTaskDateTimeValid(taskDate.value, taskTime.value)) {
+    alert('Task date and time must be in the future.');
+    return;
+  }
+
+  const task = {
+    text: taskInput.value.trim(),
+    date: taskDate.value,
+    time: taskTime.value,
+    category: taskCategory.value,
+    quote: getRandomQuote(),
+  };
+
+  // Log the action to history
+  history.push({
+    action: "Added",
+    task: task,
+    timestamp: new Date().toLocaleString(),
+  });
+
+  // Rest of the function remains the same
+  scheduleNotification(task);
+  const taskItem = document.createElement('li');
+  taskItem.innerHTML = `
+      <span>${task.text} - ${task.date} ${task.time} (${task.category})</span>
+      <div class="quote">${task.quote}</div>
+      <textarea class="sticky-note" placeholder="Add a note..."></textarea>
+      <div class="task-actions">
+          <button class="complete-btn" onclick="completeTask(this)">Complete</button>
+          <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+      </div>
+  `;
+  document.getElementById('tasks').appendChild(taskItem);
+  showInAppNotification("Task added successfully!");
+
+  // Store task in local storage
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.push(task);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  // Clear input fields
+  taskInput.value = '';
+  taskDate.value = '';
+  taskTime.value = '';
+  taskCategory.value = 'work';
+}
+function completeTask(button) {
+  const taskItem = button.closest('li');
+  const taskText = taskItem.querySelector('span').textContent.split(' - ')[0].trim();
+
+  // Log the action to history
+  history.push({
+    action: "Completed",
+    task: { text: taskText },
+    timestamp: new Date().toLocaleString(),
+  });
+
+  taskItem.classList.toggle('done');
+  updateLocalStorage();
+}
+function deleteTask(button) {
+  const taskItem = button.closest('li');
+  const taskText = taskItem.querySelector('span').textContent.split(' - ')[0].trim();
+
+  // Log the action to history
+  history.push({
+    action: "Deleted",
+    task: { text: taskText },
+    timestamp: new Date().toLocaleString(),
+  });
+
+  // Remove from local storage
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks = tasks.filter(task => task.text.trim() !== taskText);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  taskItem.remove();
+  showInAppNotification("Task deleted successfully!");
+}
+function updateLocalStorage() {
+  const tasks = [];
+  const taskItems = document.querySelectorAll('#tasks li');
+  taskItems.forEach(item => {
+      const taskSpan = item.querySelector('span');
+      const taskText = taskSpan.textContent; // This will ignore any HTML tags inside the span
+      const taskQuote = item.querySelector('.quote').textContent;
+
+      // Extract date, time, and category from the task text
+      const taskDetails = taskText.split(' - ');
+      const taskDateTimeCategory = taskDetails[1].split(' ');
+      const taskDate = taskDateTimeCategory[0];
+      const taskTime = taskDateTimeCategory[1];
+      const taskCategory = taskDateTimeCategory[2].replace(/[()]/g, '');
+
+      tasks.push({
+          text: taskDetails[0], // Task text without date, time, and category
+          date: taskDate,
+          time: taskTime,
+          category: taskCategory,
+          quote: taskQuote,
+      });
+  });
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function openModal() {
+  document.getElementById('historyModal').style.display = 'block';
+  const historyContent = document.getElementById('historyContent');
+
+  // Clear previous content
+  historyContent.innerHTML = '';
+
+  // Add each history entry to the modal
+  history.forEach(entry => {
+    const historyItem = document.createElement('div');
+    historyItem.className = 'history-item';
+    historyItem.innerHTML = `
+      <strong>${entry.action}</strong>: ${entry.task.text} (${entry.timestamp})
+    `;
+    historyContent.appendChild(historyItem);
+  });
+
+  // Display the modal
+  modal.style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('historyModal').style.display = 'none';
+}
+
+function searchTasks() {
+  const searchInput = document.getElementById('searchInput').value.toLowerCase();
+  const tasks = document.querySelectorAll('#tasks li');
+
+  tasks.forEach(task => {
+      const taskText = task.textContent.toLowerCase();
+      if (taskText.includes(searchInput)) {
+          task.style.display = 'flex';
+      } else {
+          task.style.display = 'none';
+      }
+  });
+}
+
+// Filtering Functionality
+document.getElementById('showAll').addEventListener('click', function() {
+  filterTasks('all');
+});
+
+document.getElementById('showCompleted').addEventListener('click', function() {
+  filterTasks('completed');
+});
+
+document.getElementById('showPending').addEventListener('click', function() {
+  filterTasks('pending');
+});
+
+function filterTasks(filter) {
+  const tasks = document.querySelectorAll('#tasks li');
+  
+  tasks.forEach(task => {
+      if (filter === 'all') {
+          task.style.display = 'flex';
+      } else if (filter === 'completed') {
+          task.classList.contains('done') ? task.style.display = 'flex' : task.style.display = 'none';
+      } else if (filter === 'pending') {
+          task.classList.contains('done') ? task.style.display = 'none' : task.style.display = 'flex';
+      }
+  });
+}

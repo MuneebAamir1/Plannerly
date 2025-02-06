@@ -1,7 +1,3 @@
-document.getElementById('themeToggle').addEventListener('click', function() {
-  document.body.classList.toggle('light-theme');
-});
-
 // Quotes Array
 const quotesArray = [
   "Success is not final, failure is not fatal: it is the courage to continue that counts.",
@@ -16,66 +12,66 @@ const quotesArray = [
   "Opportunities don't happen, you create them."
 ];
 
+// History Array to store task actions
+let history = [];
+
+// Function to get a random quote
 function getRandomQuote() {
   return quotesArray[Math.floor(Math.random() * quotesArray.length)];
 }
 
-function requestNotificationPermission() {
-  if (Notification.permission !== "granted") {
-    Notification.requestPermission();
-  }
+// Function to validate task date and time (not in the past)
+function isTaskDateTimeValid(taskDate, taskTime) {
+  const currentDateTime = new Date(); // Current date and time
+  const taskDateTime = new Date(`${taskDate}T${taskTime}`); // Task date and time
+  return taskDateTime > currentDateTime;
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  requestNotificationPermission();
-});
-
-function scheduleNotification(task) {
-  let taskDateTime = new Date(task.date + "T" + task.time);
-  let timeUntilTask = taskDateTime - new Date();
-  if (timeUntilTask > 0) {
-    setTimeout(() => showNotification(task.text, task.quote), timeUntilTask);
-  }
+// Function to validate task text (no special characters)
+function isTaskTextValid(taskText) {
+  const regex = /^[a-zA-Z0-9\s.,!?]+$/; // Allow alphanumeric, spaces, and basic punctuation
+  return regex.test(taskText);
 }
 
-function showNotification(taskText, quote) {
-  if (Notification.permission === "granted") {
-    new Notification("Task Reminder", { body: `${taskText}\nMotivation: ${quote}` });
-    document.getElementById("notificationSound").play();
-  }
-}
-
-function showInAppNotification(message) {
-  const notificationDiv = document.getElementById("notification");
-  notificationDiv.textContent = message;
-  notificationDiv.style.display = "block";
-  setTimeout(() => {
-    notificationDiv.style.display = "none";
-  }, 3000);
-}
-
+// Function to add a task
 function addTask() {
   const taskInput = document.getElementById('taskInput');
   const taskDate = document.getElementById('taskDate');
   const taskTime = document.getElementById('taskTime');
   const taskCategory = document.getElementById('taskCategory');
-  const tasksList = document.getElementById('tasks');
 
-  if (taskInput.value.trim() === '') {
-      alert('Please enter a task.');
-      return;
+  // Validate task text (no special characters)
+  if (!isTaskTextValid(taskInput.value.trim())) {
+    alert('Task text should not contain special characters.');
+    return;
   }
 
+  // Validate task date and time (not in the past)
+  if (!isTaskDateTimeValid(taskDate.value, taskTime.value)) {
+    alert('Task date and time must be in the future.');
+    return;
+  }
+
+  // Create task object
   const task = {
-    text: taskInput.value,
+    text: taskInput.value.trim(),
     date: taskDate.value,
     time: taskTime.value,
     category: taskCategory.value,
     quote: getRandomQuote(),
   };
 
+  // Log the "Added" action to history
+  history.push({
+    action: "Added",
+    task: task,
+    timestamp: new Date().toLocaleString(),
+  });
+
+  // Schedule notification for the task
   scheduleNotification(task);
 
+  // Create task item and add it to the DOM
   const taskItem = document.createElement('li');
   taskItem.innerHTML = `
       <span>${task.text} - ${task.date} ${task.time} (${task.category})</span>
@@ -86,72 +82,112 @@ function addTask() {
           <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
       </div>
   `;
-  tasksList.appendChild(taskItem);
+  document.getElementById('tasks').appendChild(taskItem);
 
+  // Show in-app notification
   showInAppNotification("Task added successfully!");
 
+  // Store task in local storage
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.push(task);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  // Clear input fields
   taskInput.value = '';
   taskDate.value = '';
   taskTime.value = '';
   taskCategory.value = 'work';
 }
 
+// Function to complete a task
 function completeTask(button) {
   const taskItem = button.closest('li');
+  const taskText = taskItem.querySelector('span').textContent.split(' - ')[0].trim();
+
+  // Log the "Completed" action to history
+  history.push({
+    action: "Completed",
+    task: { text: taskText },
+    timestamp: new Date().toLocaleString(),
+  });
+
+  // Toggle "done" class for visual indication
   taskItem.classList.toggle('done');
+
+  // Update local storage
+  updateLocalStorage();
 }
 
+// Function to delete a task
 function deleteTask(button) {
   const taskItem = button.closest('li');
+  const taskText = taskItem.querySelector('span').textContent.split(' - ')[0].trim();
+
+  // Log the "Deleted" action to history
+  history.push({
+    action: "Deleted",
+    task: { text: taskText },
+    timestamp: new Date().toLocaleString(),
+  });
+
+  // Remove task from local storage
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks = tasks.filter(task => task.text.trim() !== taskText);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  // Remove task from the DOM
   taskItem.remove();
+
+  // Show in-app notification
   showInAppNotification("Task deleted successfully!");
 }
 
+// Function to open the history modal
 function openModal() {
-  document.getElementById('historyModal').style.display = 'block';
+  const modal = document.getElementById('historyModal');
+  const historyContent = document.getElementById('historyContent');
+
+  // Clear previous content
+  historyContent.innerHTML = '';
+
+  // Add each history entry to the modal
+  history.forEach(entry => {
+    const historyItem = document.createElement('div');
+    historyItem.className = 'history-item';
+    historyItem.innerHTML = `
+      <strong>${entry.action}</strong>: ${entry.task.text} (${entry.timestamp})
+    `;
+    historyContent.appendChild(historyItem);
+  });
+
+  // Display the modal
+  modal.style.display = 'block';
 }
 
+// Function to close the history modal
 function closeModal() {
   document.getElementById('historyModal').style.display = 'none';
 }
 
-function searchTasks() {
-  const searchInput = document.getElementById('searchInput').value.toLowerCase();
-  const tasks = document.querySelectorAll('#tasks li');
+// Load tasks from local storage on page load
+document.addEventListener("DOMContentLoaded", function () {
+  loadTasks();
+});
 
+// Function to load tasks from local storage
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
   tasks.forEach(task => {
-      const taskText = task.textContent.toLowerCase();
-      if (taskText.includes(searchInput)) {
-          task.style.display = 'flex';
-      } else {
-          task.style.display = 'none';
-      }
-  });
-}
-
-// Filtering Functionality
-document.getElementById('showAll').addEventListener('click', function() {
-  filterTasks('all');
-});
-
-document.getElementById('showCompleted').addEventListener('click', function() {
-  filterTasks('completed');
-});
-
-document.getElementById('showPending').addEventListener('click', function() {
-  filterTasks('pending');
-});
-
-function filterTasks(filter) {
-  const tasks = document.querySelectorAll('#tasks li');
-  
-  tasks.forEach(task => {
-      if (filter === 'all') {
-          task.style.display = 'flex';
-      } else if (filter === 'completed') {
-          task.classList.contains('done') ? task.style.display = 'flex' : task.style.display = 'none';
-      } else if (filter === 'pending') {
-          task.classList.contains('done') ? task.style.display = 'none' : task.style.display = 'flex';
-      }
+    const taskItem = document.createElement('li');
+    taskItem.innerHTML = `
+       <span>${task.text} - ${task.date} ${task.time} (${task.category})</span>
+      <div class="quote">${task.quote}</div>
+      <textarea class="sticky-note" placeholder="Add a note..."></textarea>
+      <div class="task-actions">
+          <button class="complete-btn" onclick="completeTask(this)">Complete</button>
+          <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+      </div>
+    `;
+    document.getElementById('tasks').appendChild(taskItem);
   });
 }
