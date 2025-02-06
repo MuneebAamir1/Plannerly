@@ -1,3 +1,13 @@
+// Theme Toggle
+document.getElementById('themeToggle').addEventListener('click', function () {
+  document.body.classList.toggle('light-theme');
+});
+
+// Request notification permission on page load
+document.addEventListener("DOMContentLoaded", function () {
+  requestNotificationPermission();
+});
+
 // Quotes Array
 const quotesArray = [
   "Success is not final, failure is not fatal: it is the courage to continue that counts.",
@@ -12,25 +22,9 @@ const quotesArray = [
   "Opportunities don't happen, you create them."
 ];
 
-// History Array to store task actions
-let history = [];
-
 // Function to get a random quote
 function getRandomQuote() {
   return quotesArray[Math.floor(Math.random() * quotesArray.length)];
-}
-
-// Function to validate task date and time (not in the past)
-function isTaskDateTimeValid(taskDate, taskTime) {
-  const currentDateTime = new Date(); // Current date and time
-  const taskDateTime = new Date(`${taskDate}T${taskTime}`); // Task date and time
-  return taskDateTime > currentDateTime;
-}
-
-// Function to validate task text (no special characters)
-function isTaskTextValid(taskText) {
-  const regex = /^[a-zA-Z0-9\s.,!?]+$/; // Allow alphanumeric, spaces, and basic punctuation
-  return regex.test(taskText);
 }
 
 // Function to add a task
@@ -39,129 +33,88 @@ function addTask() {
   const taskDate = document.getElementById('taskDate');
   const taskTime = document.getElementById('taskTime');
   const taskCategory = document.getElementById('taskCategory');
+  const tasksList = document.getElementById('tasks');
+  const historyList = document.getElementById('historyList');
 
-  // Validate task text (no special characters)
-  if (!isTaskTextValid(taskInput.value.trim())) {
-    alert('Task text should not contain special characters.');
+  // Validate task input
+  if (taskInput.value.trim() === '') {
+    alert('Please enter a task.');
     return;
   }
 
-  // Validate task date and time (not in the past)
-  if (!isTaskDateTimeValid(taskDate.value, taskTime.value)) {
-    alert('Task date and time must be in the future.');
-    return;
-  }
-
-  // Create task object
-  const task = {
-    text: taskInput.value.trim(),
-    date: taskDate.value,
-    time: taskTime.value,
-    category: taskCategory.value,
-    quote: getRandomQuote(),
-  };
-
-  // Log the "Added" action to history
-  history.push({
-    action: "Added",
-    task: task,
-    timestamp: new Date().toLocaleString(),
-  });
-
-  // Schedule notification for the task
-  scheduleNotification(task);
-
-  // Create task item and add it to the DOM
+  // Create task item
   const taskItem = document.createElement('li');
   taskItem.innerHTML = `
-      <span>${task.text} - ${task.date} ${task.time} (${task.category})</span>
-      <div class="quote">${task.quote}</div>
-      <textarea class="sticky-note" placeholder="Add a note..."></textarea>
-      <div class="task-actions">
-          <button class="complete-btn" onclick="completeTask(this)">Complete</button>
-          <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
-      </div>
+    <span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span>
+    <div class="quote">${getRandomQuote()}</div>
+    <textarea class="sticky-note" placeholder="Add a note..."></textarea>
+    <div class="task-actions">
+      <button class="complete-btn" onclick="completeTask(this)">Complete</button>
+      <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
+    </div>
   `;
-  document.getElementById('tasks').appendChild(taskItem);
+  tasksList.appendChild(taskItem);
 
-  // Show in-app notification
-  showInAppNotification("Task added successfully!");
-
-  // Store task in local storage
-  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  tasks.push(task);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+  // Create history item
+  const historyItem = document.createElement('li');
+  historyItem.innerHTML = `
+    <span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span>
+    <span class="status">Pending</span>
+  `;
+  historyItem.dataset.task = taskInput.value;
+  historyItem.dataset.date = taskDate.value;
+  historyItem.dataset.time = taskTime.value;
+  historyList.appendChild(historyItem);
 
   // Clear input fields
   taskInput.value = '';
   taskDate.value = '';
   taskTime.value = '';
   taskCategory.value = 'work';
+
+  // Show notification and schedule reminder
+  showNotification('Task added successfully!');
+  scheduleNotification(taskInput.value, taskDate.value, taskTime.value, historyItem);
 }
 
-// Function to complete a task
+// Function to mark a task as complete
 function completeTask(button) {
   const taskItem = button.closest('li');
-  const taskText = taskItem.querySelector('span').textContent.split(' - ')[0].trim();
-
-  // Log the "Completed" action to history
-  history.push({
-    action: "Completed",
-    task: { text: taskText },
-    timestamp: new Date().toLocaleString(),
-  });
-
-  // Toggle "done" class for visual indication
   taskItem.classList.toggle('done');
-
-  // Update local storage
-  updateLocalStorage();
+  updateHistoryStatus(taskItem.querySelector('span').textContent, 'Done');
 }
 
 // Function to delete a task
 function deleteTask(button) {
   const taskItem = button.closest('li');
-  const taskText = taskItem.querySelector('span').textContent.split(' - ')[0].trim();
-
-  // Log the "Deleted" action to history
-  history.push({
-    action: "Deleted",
-    task: { text: taskText },
-    timestamp: new Date().toLocaleString(),
-  });
-
-  // Remove task from local storage
-  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  tasks = tasks.filter(task => task.text.trim() !== taskText);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-
-  // Remove task from the DOM
+  updateHistoryStatus(taskItem.querySelector('span').textContent, 'Deleted');
   taskItem.remove();
+  showNotification('Task deleted successfully!');
+}
 
-  // Show in-app notification
-  showInAppNotification("Task deleted successfully!");
+// Function to update history status
+function updateHistoryStatus(taskText, status) {
+  const historyItems = document.querySelectorAll('#historyList li');
+  historyItems.forEach(item => {
+    if (item.dataset.task === taskText.split(' - ')[0]) {
+      item.querySelector('.status').textContent = status;
+    }
+  });
+}
+
+// Function to show a notification
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 3000);
 }
 
 // Function to open the history modal
 function openModal() {
-  const modal = document.getElementById('historyModal');
-  const historyContent = document.getElementById('historyContent');
-
-  // Clear previous content
-  historyContent.innerHTML = '';
-
-  // Add each history entry to the modal
-  history.forEach(entry => {
-    const historyItem = document.createElement('div');
-    historyItem.className = 'history-item';
-    historyItem.innerHTML = `
-      <strong>${entry.action}</strong>: ${entry.task.text} (${entry.timestamp})
-    `;
-    historyContent.appendChild(historyItem);
-  });
-
-  // Display the modal
-  modal.style.display = 'block';
+  document.getElementById('historyModal').style.display = 'block';
 }
 
 // Function to close the history modal
@@ -169,25 +122,42 @@ function closeModal() {
   document.getElementById('historyModal').style.display = 'none';
 }
 
-// Load tasks from local storage on page load
-document.addEventListener("DOMContentLoaded", function () {
-  loadTasks();
+// Clear history
+document.getElementById('clearHistoryBtn').addEventListener('click', function () {
+  document.getElementById('historyList').innerHTML = '';
 });
 
-// Function to load tasks from local storage
-function loadTasks() {
-  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  tasks.forEach(task => {
-    const taskItem = document.createElement('li');
-    taskItem.innerHTML = `
-       <span>${task.text} - ${task.date} ${task.time} (${task.category})</span>
-      <div class="quote">${task.quote}</div>
-      <textarea class="sticky-note" placeholder="Add a note..."></textarea>
-      <div class="task-actions">
-          <button class="complete-btn" onclick="completeTask(this)">Complete</button>
-          <button class="delete-btn" onclick="deleteTask(this)">Delete</button>
-      </div>
-    `;
-    document.getElementById('tasks').appendChild(taskItem);
+// Function to schedule a notification
+function scheduleNotification(task, date, time, historyItem) {
+  if (!('Notification' in window)) {
+    console.log('This browser does not support notifications.');
+    return;
+  }
+
+  Notification.requestPermission().then(permission => {
+    if (permission === 'granted') {
+      const taskDateTime = new Date(`${date}T${time}`);
+      const now = new Date();
+      const delay = taskDateTime - now;
+
+      if (delay > 0) {
+        setTimeout(() => {
+          const notification = new Notification('Task Reminder', {
+            body: `Reminder: ${task}`
+          });
+          notification.onclick = () => {
+            window.focus();
+          };
+          historyItem.querySelector('.status').textContent = 'Reminded but Pending';
+        }, delay);
+      }
+    }
   });
+}
+
+// Function to request notification permission
+function requestNotificationPermission() {
+  if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
 }
