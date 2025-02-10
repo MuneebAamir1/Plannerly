@@ -1,15 +1,265 @@
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: Arial, sans-serif;
   background: linear-gradient(135deg, #1e293b, #0f172a);
   color: #fff;
   margin: 0;
-  padding: 20px;
-  transition: background 0.3s, color 0.3s;
+  padding: 0;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 body.light-theme {
-  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-  color: #333;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f7fa; /* Light background color */
+  color: #333; /* Dark text for readability */
+  transition: background 0.3s ease, color 0.3s ease; /* Smooth theme transitions */
+}
+body.light-theme header {
+  background-color: #ffffff; /* White background */
+  padding: 15px 20px;
+  border-bottom: 2px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme header h1 {
+  margin: 0;
+  font-size: 24px;
+  color: #2c3e50; /* Dark text for the header */
+}
+
+header .theme-toggle button:hover {
+  background-color: #2980b9; /* Darker blue on hover */
+}
+
+/* Search Bar */
+body.light-theme #searchContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+body.light-theme #searchContainer button {
+  background-color: #3498db; /* Blue search button */
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+body.loight-theme #searchContainer button:hover {
+  background-color: #2980b9; /* Darker blue on hover */
+}
+
+body.light-theme #searchContainer input {
+  padding: 10px;
+  font-size: 16px;
+  width: 60%;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  outline: none;
+  color: #0f172a;
+}
+
+body.light-theme #searchContainer input:focus {
+  border-color: #3498db; /* Blue border on focus */
+}
+
+body.light-theme header .theme-toggle button {
+  padding: 8px 12px;
+  font-size: 16px;
+  background-color: #3498db; /* Light blue color for the toggle button */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+body.light-theme #filterButtons button {
+  background-color: #ecf0f1; /* Light gray button */
+  color: #34495e; /* Dark text */
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+  transition: background-color 0.3s ease;
+}
+
+body.light-theme #filterButtons button:hover {
+  background-color: #bdc3c7; /* Slightly darker gray on hover */
+}
+
+body.light-theme #taskForm {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+body.light-theme #taskForm input, #taskForm select, #taskForm button {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  border: 1px solid black;
+  color: #0f172a;
+}
+
+body.light-theme #taskForm select {
+  background-color: #ffffff;
+}
+
+body.light-theme #taskForm button {
+  background-color: #2ecc71; /* Green button for adding tasks */
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+body.light-theme #taskForm button:hover {
+  background-color: #27ae60; /* Darker green on hover */
+}
+
+/* Motivational Quote */
+body.light-theme #quoteText {
+  font-size: 18px;
+  font-style: italic;
+  color: #7f8c8d;
+  margin: 20px 0;
+  text-align: center;
+}
+
+body.light-theme #tasks {
+  list-style-type: none;
+  padding: 0;
+}
+
+body.light-theme #tasks li {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+body.light-theme #tasks li:hover {
+  transform: scale(1.02); /* Slight zoom effect on hover */
+}
+
+body.light-theme #tasks li span {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+body.light-theme #tasks li .quote {
+  font-style: italic;
+  color: #7f8c8d;
+  margin: 10px 0;
+}
+
+body.light-theme #tasks li .task-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+body.light-theme #tasks li .task-actions button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+body.light-theme #tasks li .task-actions .complete-btn {
+  background-color: #2ecc71;
+  color: white;
+}
+
+body.light-theme #tasks li .task-actions .complete-btn:hover {
+  background-color: #27ae60;
+}
+
+body.light-theme#tasks li .task-actions .delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+body.light-theme #tasks li .task-actions .delete-btn:hover {
+  background-color: #c0392b;
+}
+
+body.light-theme #historyModal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme .modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+}
+
+body.light-theme .close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+body.light-theme .close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Clear History Button */
+body.light-theme #clearHistoryBtn {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+body.light-theme #clearHistoryBtn:hover {
+  background-color: #c0392b;
+}
+
+/* History List */
+body.light-theme #historyList {
+  padding: 0;
+  margin: 10px;
+  margin-top: 50px;
+}
+
+body.light-theme #historyList li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #154318; /* Optional: Adds a divider between items */
+  margin-bottom: 10px; /* Adds vertical space between list items */
 }
 
 header {
@@ -25,7 +275,8 @@ header {
 
 header h1 {
   margin: 0;
-  font-size: 2.5rem;
+  font-size: 24px;
+  color: white;
 }
 
 .logo-placeholder {
@@ -59,6 +310,7 @@ header h1 {
   background-color: #3e8e41;
 }
 
+
 #taskForm {
   display: flex
   ;
@@ -82,7 +334,8 @@ header h1 {
 
 #taskForm input,
 #taskForm select,
-#taskForm button {
+#taskForm button,
+#taskCategory {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -124,12 +377,14 @@ header h1 {
 
 #tasks li {
   background: rgba(31, 41, 55, 0.8);
-  margin-bottom: 10px;
-  padding: 15px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
 }
 
 #tasks li:hover {
@@ -192,7 +447,7 @@ header h1 {
   border-radius: 10px;
   width: 90%;
   max-width: 600px;
-  color: white;
+  color: #4abbd5;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -324,5 +579,91 @@ header h1 {
   transform: scale(1.05);
 }
 
+#historyList {
+  margin: 10px;
+  margin-top: 50px;
+}
+
+#historyList li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #154318; /* Optional: Adds a divider between items */
+  margin-bottom: 10px; /* Adds vertical space between list items */
+}
 
 
+___________________________________________________________________________________________________________
+#quoteText {
+  font-size: 18px;
+  font-style: italic;
+  color: #7f8c8d;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* Task List */
+#tasks {
+  list-style-type: none;
+  padding: 0;
+}
+
+#tasks li {
+  background-color: rgba(31, 41, 55, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+#tasks li:hover {
+  transform: scale(1.02); /* Slight zoom effect on hover */
+}
+
+#tasks li span {
+  font-size: 16px;
+  font-weight: bold;
+  color: whitesmoke;
+}
+
+#tasks li .quote {
+  font-style: italic;
+  color: #7f8c8d;
+  margin: 10px 0;
+}
+
+#tasks li .task-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+#tasks li .task-actions button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+#tasks li .task-actions .complete-btn {
+  background-color: #2ecc71;
+  color: white;
+}
+
+#tasks li .task-actions .complete-btn:hover {
+  background-color: #27ae60;
+}
+
+#tasks li .task-actions .delete-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+#tasks li .task-actions .delete-btn:hover {
+  background-color: #c0392b;
+}
