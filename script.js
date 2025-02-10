@@ -69,9 +69,10 @@ function addTask() {
 
   // Create task item
   const taskItem = document.createElement('li');
+  const taskQuote = getRandomQuote(); // Get random quote for task
   taskItem.innerHTML = `
     <span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span>
-    <div class="quote">${getRandomQuote()}</div>
+    <div class="quote">${taskQuote}</div>
     <textarea class="sticky-note" placeholder="Add a note..."></textarea>
     <div class="task-actions">
       <button class="complete-btn" onclick="completeTask(this)">Complete</button>
@@ -80,9 +81,10 @@ function addTask() {
   `;
   tasksList.appendChild(taskItem);
 
-  showInAppNotification("Task added successfully!");
+  // Schedule notification
+  scheduleNotification(taskInput.value, taskDate.value, taskTime.value, taskQuote);
+
   // Create history item  
-  scheduleNotification(taskDate.value, taskTime.value);
   const historyItem = document.createElement('li');
   historyItem.innerHTML = `
     <span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span>
@@ -102,8 +104,8 @@ function addTask() {
   taskDate.value = '';
   taskTime.value = '';
   taskCategory.value = 'work';
-
 }
+
 
 // Function to mark a task as complete
 function completeTask(button) {
@@ -246,13 +248,18 @@ function loadHistory() {
   });
 }
 
-function scheduleNotification(task) {
-  let taskDateTime = new Date(task.date + "T" + task.time);
+function scheduleNotification(taskText, taskDate, taskTime, taskQuote) {
+  let taskDateTime = new Date(`${taskDate}T${taskTime}`);
   let timeUntilTask = taskDateTime - new Date();
+
+  // If the task date/time is in the future, schedule a notification
   if (timeUntilTask > 0) {
-    setTimeout(() => showNotification(task.text, task.quote), timeUntilTask);
+    setTimeout(() => showNotification(taskText, taskQuote), timeUntilTask);
+  } else {
+    console.log('The task time is in the past, notification not scheduled.');
   }
 }
+
 function showNotification(taskText, quote) {
   if (Notification.permission === "granted") {
     new Notification("Task Reminder", { body: `${taskText}\nMotivation: ${quote}` });
