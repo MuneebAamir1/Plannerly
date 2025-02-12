@@ -94,6 +94,8 @@ body.light-theme #filterButtons button:hover {
   background-color: #bdc3c7; /* Slightly darker gray on hover */
 }
 
+
+
 body.light-theme #taskForm {
   margin-bottom: 20px;
   display: flex;
@@ -277,18 +279,21 @@ header h1 {
   margin: 0;
   font-size: 24px;
   color: white;
+  font-family:Georgia, 'Times New Roman', Times, serif;
 }
 
 .logo-placeholder {
-  width: 50px;
-  height: 50px;
-  background-color: #9333ea;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  color: white;
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start; 
+  height: 80px; 
+  padding-left: 20px;
+}
+
+.logo-placeholder img {
+  height: 75px; 
+  width: auto; 
+  object-fit: contain;
 }
 
 .theme-toggle button {
@@ -617,6 +622,7 @@ ________________________________________________________________________________
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease;
+  max-width: 76rem;
 }
 
 #tasks li:hover {
@@ -666,4 +672,123 @@ ________________________________________________________________________________
 
 #tasks li .task-actions .delete-btn:hover {
   background-color: #c0392b;
+}
+
+
+
+/* From Uiverse.io by Galahhad */ 
+/* checkbox settings 👇 */
+
+.switch {
+  /* global */
+  --total_transition_duration: .3s;
+  /* switch */
+  --slider_width: 2.875em;
+  --slider_height: 1.5em;
+  --slider_light_bg: linear-gradient(90deg, #1701a1 0%, #af0693 75%); /* Previously dark mode */
+  --slider_night_bg: linear-gradient(90deg, #f32a85 0%, #f19d36 100%); /* Previously light mode */
+  --slider_offset: calc((var(--slider_height) - var(--circle_diameter)) / 2);
+  --slider_radius: calc(var(--slider_height) / 2);
+  /* circle */
+  --circle_diameter: 1.125em;
+  --circle_rotation: 360deg;
+  /* svg */
+  --svg_width: var(--circle_diameter);
+  --sun-color: #fff;
+  --moon-color: #fff;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider svg {
+  position: absolute;
+  height: auto;
+  color: var(--svg-color);
+  transition: var(--total_transition_duration) ease;
+  width: 100%;
+}
+
+.circle svg.sun {
+  transform: scale(0); /* Changed: Sun (light mode) is now hidden */
+  color: var(--sun-color);
+}
+
+.circle svg.moon {
+  transform: scale(1); /* Changed: Moon (dark mode) is now visible */
+  color: var(--moon-color);
+  width: calc(100% - 2px);
+}
+
+.slider {
+  display: inline-block;
+  width: var(--slider_width);
+  height: var(--slider_height);
+  border-radius: var(--slider_radius);
+  position: relative;
+  cursor: pointer;
+  transition: var(--total_transition_duration) ease;
+  overflow: hidden;
+}
+
+.slider::before,
+.slider::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transition: var(--total_transition_duration) ease;
+}
+
+/* Swapped background colors */
+.slider::before {
+  opacity: 0;
+  background: var(--slider_night_bg);
+}
+
+.slider::after {
+  opacity: 1;
+  background: var(--slider_light_bg);
+}
+
+/* ------------ */
+
+.circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--circle_diameter);
+  height: var(--circle_diameter);
+  position: absolute;
+  top: var(--slider_offset);
+  left: var(--slider_offset);
+  transition: var(--total_transition_duration) ease;
+  z-index: 10;
+}
+
+/* actions */
+
+.switch input:checked+.slider::before {
+  opacity: 1;
+}
+
+.switch input:checked+.slider::after {
+  opacity: 0;
+}
+
+.switch input:active+.slider .circle {
+  transform: scale(0.9);
+}
+
+/* Swapped positions */
+.switch input:checked+.slider .circle {
+  left: calc(100% - var(--circle_diameter) - var(--slider_offset));
+}
+
+.switch input:checked+.slider .sun {
+  transform: scale(1) rotate(var(--circle_rotation)); /* Light mode sun now visible */
+}
+
+.switch input:checked+.slider .moon {
+  transform: scale(0) rotate(var(--circle_rotation)); /* Dark mode moon now hidden */
 }
