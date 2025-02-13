@@ -1,8 +1,12 @@
-// Theme Toggle
+// Set light theme by default on page load
+document.addEventListener('DOMContentLoaded', function () {
+  document.body.classList.add('light-theme');
+});
+
+// Toggle theme on button click
 document.getElementById('themeToggle').addEventListener('click', function () {
   document.body.classList.toggle('light-theme');
 });
-
 // Request notification permission on page load
 document.addEventListener('DOMContentLoaded', function () {
   requestNotificationPermission();
@@ -47,7 +51,7 @@ function addTask() {
   const taskInput = document.getElementById('taskInput');
   const taskDate = document.getElementById('taskDate');
   const taskTime = document.getElementById('taskTime');
-  const taskCategory = document.getElementById('taskCategory');
+  const taskCategory = document.getElementById('taskCategory'); // ✅ Get Category
   const tasksList = document.getElementById('tasks');
   const historyList = document.getElementById('historyList');
 
@@ -67,8 +71,9 @@ function addTask() {
     return;
   }
 
-  // Create task item
+  // ✅ Create task item with category class
   const taskItem = document.createElement('li');
+
   const taskQuote = getRandomQuote(); // Get random quote for task
   taskItem.innerHTML = `
     <span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span>
@@ -81,29 +86,15 @@ function addTask() {
   `;
   tasksList.appendChild(taskItem);
 
-  // Schedule notification
-  scheduleNotification(taskInput.value, taskDate.value, taskTime.value, taskQuote);
-
-  // Create history item  
-  const historyItem = document.createElement('li');
-  historyItem.innerHTML = `
-    <span>${taskInput.value} - ${taskDate.value} ${taskTime.value} (${taskCategory.value})</span>
-    <span class="status">Pending</span>
-  `;
-  historyItem.dataset.task = taskInput.value;
-  historyItem.dataset.date = taskDate.value;
-  historyItem.dataset.time = taskTime.value;
-  historyList.appendChild(historyItem);
-
-  // Save tasks and history to localStorage
+  // ✅ Save tasks and history
   saveTasks();
   saveHistory();
 
-  // Clear input fields
+  // ✅ Clear input fields
   taskInput.value = '';
   taskDate.value = '';
   taskTime.value = '';
-  taskCategory.value = 'work';
+  taskCategory.value = 'work'; // Reset to default category
 }
 
 
@@ -158,27 +149,27 @@ document.getElementById('clearHistoryBtn').addEventListener('click', function ()
 // Function to schedule a notification
 
 
-// Function to request notification permission
-function requestNotificationPermission() {
-  if (Notification.permission !== 'granted') {
-    Notification.requestPermission();
-  }
-}
 
 // Filter tasks
+// Attach event listeners to filter buttons
 document.getElementById('showAll').addEventListener('click', () => filterTasks('all'));
 document.getElementById('showCompleted').addEventListener('click', () => filterTasks('completed'));
 document.getElementById('showPending').addEventListener('click', () => filterTasks('pending'));
 
 function filterTasks(filter) {
-  const tasks = document.querySelectorAll('#tasks li');
+  const tasks = document.querySelectorAll('#tasks li'); // ✅ Select all tasks
+
   tasks.forEach(task => {
-    if (filter === 'all') {
-      task.style.display = 'flex';
-    } else if (filter === 'completed') {
-      task.classList.contains('done') ? task.style.display = 'flex' : task.style.display = 'none';
-    } else if (filter === 'pending') {
-      task.classList.contains('done') ? task.style.display = 'none' : task.style.display = 'flex';
+    switch (filter) {
+      case 'all':
+        task.style.display = 'flex';
+        break;
+      case 'completed':
+        task.style.display = task.classList.contains('done') ? 'flex' : 'none';
+        break;
+      case 'pending':
+        task.style.display = task.classList.contains('done') ? 'none' : 'flex';
+        break;
     }
   });
 }
