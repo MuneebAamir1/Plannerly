@@ -1,6 +1,6 @@
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #1e293b, #0f172a);
+  background: linear-gradient(135deg, #3b4c69, #28364e);
   color: #fff;
   margin: 0;
   padding: 0;
@@ -11,12 +11,12 @@ body.light-theme {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f4f7fa; /* Light background color */
+  background: linear-gradient(135deg,#e4eef8, #afbdcb); /* Light background color */
   color: #333; /* Dark text for readability */
   transition: background 0.3s ease, color 0.3s ease; /* Smooth theme transitions */
 }
 body.light-theme header {
-  background-color: #ffffff; /* White background */
+  background-color:#eef4fc; /* White background */
   padding: 15px 20px;
   border-bottom: 2px solid #e0e0e0;
   display: flex;
@@ -28,11 +28,11 @@ body.light-theme header {
 body.light-theme header h1 {
   margin: 0;
   font-size: 24px;
-  color: #2c3e50; /* Dark text for the header */
+  color: #303d4b; /* Dark text for the header */
 }
 
 header .theme-toggle button:hover {
-  background-color: #2980b9; /* Darker blue on hover */
+  background-color: #4b6b81; /* Darker blue on hover */
 }
 
 /* Search Bar */
@@ -44,15 +44,15 @@ body.light-theme #searchContainer {
 }
 
 body.light-theme #searchContainer button {
-  background-color: #3498db; /* Blue search button */
+  background-color: #728a99; /* Blue search button */
   color: white;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
 }
 
-body.loight-theme #searchContainer button:hover {
-  background-color: #2980b9; /* Darker blue on hover */
+body.light-theme #searchContainer button:hover {
+  background-color: #3b6987; /* Darker blue on hover */
 }
 
 body.light-theme #searchContainer input {
@@ -66,7 +66,7 @@ body.light-theme #searchContainer input {
 }
 
 body.light-theme #searchContainer input:focus {
-  border-color: #3498db; /* Blue border on focus */
+  border-color: #b3b6b8; /* Blue border on focus */
 }
 
 body.light-theme header .theme-toggle button {
@@ -80,18 +80,18 @@ body.light-theme header .theme-toggle button {
 }
 
 body.light-theme #filterButtons button {
-  background-color: #ecf0f1; /* Light gray button */
-  color: #34495e; /* Dark text */
-  padding: 8px 12px;
+  background-color: #283d63; /* Light gray button */
+  color: #ffffff; /* Dark text */
+  padding: 5pxpx 12px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 9px;
   cursor: pointer;
   margin: 5px;
   transition: background-color 0.3s ease;
 }
 
 body.light-theme #filterButtons button:hover {
-  background-color: #bdc3c7; /* Slightly darker gray on hover */
+  background-color: #5a76a1; /* Slightly darker gray on hover */
 }
 
 
@@ -112,25 +112,25 @@ body.light-theme #taskForm input, #taskForm select, #taskForm button {
 }
 
 body.light-theme #taskForm select {
-  background-color: #ffffff;
+  background-color: #283d63;
 }
 
 body.light-theme #taskForm button {
-  background-color: #2ecc71; /* Green button for adding tasks */
+  background-color: #283d63; /* Green button for adding tasks */
   color: white;
   border: none;
   cursor: pointer;
 }
 
 body.light-theme #taskForm button:hover {
-  background-color: #27ae60; /* Darker green on hover */
+  background-color: #5a76a1; /* Darker green on hover */
 }
 
 /* Motivational Quote */
 body.light-theme #quoteText {
   font-size: 18px;
   font-style: italic;
-  color: #7f8c8d;
+  color: #424646;
   margin: 20px 0;
   text-align: center;
 }
@@ -141,7 +141,7 @@ body.light-theme #tasks {
 }
 
 body.light-theme #tasks li {
-  background-color: #ffffff;
+  background-color: #eef4fc;
   border: 1px solid #ddd;
   padding: 15px;
   margin-bottom: 15px;
@@ -163,7 +163,7 @@ body.light-theme #tasks li span {
 
 body.light-theme #tasks li .quote {
   font-style: italic;
-  color: #7f8c8d;
+  color: #2f3636;
   margin: 10px 0;
 }
 
@@ -183,12 +183,12 @@ body.light-theme #tasks li .task-actions button {
 }
 
 body.light-theme #tasks li .task-actions .complete-btn {
-  background-color: #2ecc71;
+  background-color: #283d63;
   color: white;
 }
 
 body.light-theme #tasks li .task-actions .complete-btn:hover {
-  background-color: #27ae60;
+  background-color: #5a76a1;
 }
 
 body.light-theme#tasks li .task-actions .delete-btn {
@@ -269,7 +269,7 @@ header {
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.5);
+  background:  #1e293b;
   backdrop-filter: blur(10px);
   border-radius: 10px;
   margin-bottom: 20px;
@@ -296,42 +296,28 @@ header h1 {
   object-fit: contain;
 }
 
-.theme-toggle button {
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
-  background-color: #9333ea;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.theme-toggle button:hover {
-  background-color: #7c3aed;
-}
-
-
 #searchContainer button:hover {
-  background-color: #3e8e41;
+  background-color: #232f52;
 }
 
 
 #taskForm {
-  display: flex
-  ;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-      max-width: 45rem;
-      margin-bottom: 30px;
-      margin-left: 220px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 25px;
-      border-radius: 15px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
+  display: flex;
+  flex-wrap: nowrap; /* Prevent wrapping */
+  justify-content: space-between; /* Adjust spacing */
+  align-items: center; /* Align elements vertically */
+  gap: 10px; /* Reduce gap for better alignment */
+  max-width: 45rem;
+  margin-bottom: 30px;
+  margin-left: 220px;
+  background: rgba(184, 75, 75, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
+
 #taskForm:hover {
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
   transform: translateY(-5px); /* Lift effect on hover */
@@ -343,7 +329,7 @@ header h1 {
 #taskCategory {
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(190, 42, 42, 0.2);
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
   transition: all 0.3s ease;
@@ -352,16 +338,17 @@ header h1 {
 #taskForm input:focus,
 #taskForm select:focus {
   background-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0px 0px 15px 2px #4caf50;
+  box-shadow: 0px 0px 15px 2px #999d9a;
 }
 
 #taskForm button {
-  background-color: #4caf50;
+  background-color:  #5e7598;  
   cursor: pointer;
+  min-width: 90px;
 }
 
 #taskForm button:hover {
-  background-color: #3e8e41;
+  background-color: #476598;
 }
 
 #filterButtons button:hover {
@@ -381,9 +368,9 @@ header h1 {
 }
 
 #tasks li {
-  background: rgba(31, 41, 55, 0.8);
+  background: rgba(223, 228, 223, 0.8);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(156, 12, 12, 0.1);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   padding: 15px;
   margin-bottom: 15px;
@@ -416,12 +403,12 @@ header h1 {
 }
 
 .task-actions .complete-btn {
-  background-color: #4caf50;
+  background-color: #537598;
   color: white;
 }
 
 .task-actions .complete-btn:hover {
-  background-color: #3e8e41;
+  background-color: #476598;
 }
 
 .task-actions .delete-btn {
@@ -446,13 +433,13 @@ header h1 {
 
 .modal-content {
   position: relative;
-  background-color: #1e293b;
+  background-color: #1e2b3e;
   margin: 10% auto;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
   max-width: 600px;
-  color: #4abbd5;
+  color:  #476598;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -569,10 +556,10 @@ header h1 {
 }
 
 #filterButtons button {
-  padding: 10px 20px;
+  padding: 10px 20px;               
   border-radius: 8px;
   border: none;
-  background-color: #9333ea;
+  background-color: #5e7598;
   color: white;
   cursor: pointer;
   font-size: 14px;
@@ -580,7 +567,7 @@ header h1 {
 }
 
 #filterButtons button:hover {
-  background-color: #7e22ce;
+  background-color: #476598;
   transform: scale(1.05);
 }
 
@@ -593,7 +580,7 @@ header h1 {
   display: flex;
   justify-content: space-between;
   padding: 10px;
-  border-bottom: 1px solid #154318; /* Optional: Adds a divider between items */
+  border-bottom: 1px solid #000000; /* Optional: Adds a divider between items */
   margin-bottom: 10px; /* Adds vertical space between list items */
 }
 
@@ -676,6 +663,11 @@ ________________________________________________________________________________
 
 
 
+
+
+/* From Uiverse.io by Galahhad */ 
+/* checkbox settings 👇 */
+
 /* From Uiverse.io by Galahhad */ 
 /* checkbox settings 👇 */
 
@@ -685,8 +677,8 @@ ________________________________________________________________________________
   /* switch */
   --slider_width: 2.875em;
   --slider_height: 1.5em;
-  --slider_light_bg: linear-gradient(90deg, #1701a1 0%, #af0693 75%); /* Previously dark mode */
-  --slider_night_bg: linear-gradient(90deg, #f32a85 0%, #f19d36 100%); /* Previously light mode */
+  --slider_light_bg: linear-gradient(90deg, #14457a 0%, #6aaed2 100%); /* Previously dark mode */
+  --slider_night_bg: linear-gradient(90deg, #747474  0%, #032b5c 75%); /* Previously light mode */
   --slider_offset: calc((var(--slider_height) - var(--circle_diameter)) / 2);
   --slider_radius: calc(var(--slider_height) / 2);
   /* circle */
@@ -710,13 +702,15 @@ ________________________________________________________________________________
   width: 100%;
 }
 
+/* Sun now visible by default */
 .circle svg.sun {
-  transform: scale(0); /* Changed: Sun (light mode) is now hidden */
+  transform: scale(1); 
   color: var(--sun-color);
 }
 
+/* Moon now hidden by default */
 .circle svg.moon {
-  transform: scale(1); /* Changed: Moon (dark mode) is now visible */
+  transform: scale(0); 
   color: var(--moon-color);
   width: calc(100% - 2px);
 }
@@ -785,10 +779,13 @@ ________________________________________________________________________________
   left: calc(100% - var(--circle_diameter) - var(--slider_offset));
 }
 
+/* Light mode sun now hidden */
 .switch input:checked+.slider .sun {
-  transform: scale(1) rotate(var(--circle_rotation)); /* Light mode sun now visible */
+  transform: scale(0) rotate(var(--circle_rotation)); 
 }
 
+/* Dark mode moon now visible */
 .switch input:checked+.slider .moon {
-  transform: scale(0) rotate(var(--circle_rotation)); /* Dark mode moon now hidden */
+  transform: scale(1) rotate(var(--circle_rotation)); 
 }
+
