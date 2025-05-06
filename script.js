@@ -280,3 +280,16 @@ function showInAppNotification(message) {
     notificationDiv.style.display = "none";
   }, 3000);
 }
+
+function searchTasks() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const tasks = document.querySelectorAll('#tasks li');
+  tasks.forEach(task => {
+    const taskText = task.querySelector('span').textContent.toLowerCase();
+    if (taskText.includes(query)) {
+      task.style.display = 'flex';
+    } else {
+      task.style.display = 'none';
+    }
+  });
+}
